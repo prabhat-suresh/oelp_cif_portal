@@ -37,7 +37,7 @@ next-env.d.ts
 
 # user-specific
 # User-specific stuff
-./.idea
+.idea/
 .env
 .idea/**/workspace.xml
 .idea/**/tasks.xml
