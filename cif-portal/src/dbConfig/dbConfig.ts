@@ -1,4 +1,5 @@
 import  mongoose from "mongoose";
+const mongoDBURI="mongodb+srv://oelp:<password>@cluster0.rypu0hh.mongodb.net/?retryWrites=true&w=majority"
 export async function connect(){
     try {
         mongoose.connect(process.env.MONGO_URI!);
