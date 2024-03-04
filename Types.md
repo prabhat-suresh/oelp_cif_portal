@@ -1,10 +1,10 @@
 *Bold implies required fields*
-1. /signup
-	Expects {
-		**username**: string (minimum 3,  maximum 20),
-		**email**: string
-		**password**: string
-		**mobile**: string
-		**department**: string
-		**role**: String (by default role is Student)
+1. /signup <br>
+	Expects {<br>
+		**username**: string (minimum 3,  maximum 20), <br>
+		**email**: string <br>
+		**password**: string <br>
+		**mobile**: string <br>
+		**department**: string <br>
+		**role**: String (by default role is Student) <br>
 	}
