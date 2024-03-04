@@ -8,3 +8,20 @@
 		**department**: string <br>
 		**role**: String (by default role is Student) <br>
 	}
+	Returns JSON response:
+	if user already exists
+	{
+		"status": 400,
+		"error": "User already exists"
+	}
+	if successful
+	{
+		message: "User created successfully",
+		success: true,
+		status: 201,
+    	}
+   	if server error
+   	{
+		error: error.message,
+		status: 500
+	}
