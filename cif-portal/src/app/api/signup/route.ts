@@ -5,6 +5,10 @@ import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 connect();
 
+
+// to do
+// 1. add email verification
+// 2. assign roles
 export async function POST(request: NextRequest) {
   try {
     const request_body = await request.json();
