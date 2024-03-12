@@ -21,18 +21,18 @@ const userSchema = new mongoose.Schema({
   mobile: {
     type: String,
     required: true,
-    unique:true,
-    min:10,
-    max:13
+    unique: true,
+    min: 10,
+    max: 13,
   },
-  department:{
+  department: {
     type: String,
-    require: true
-    },
-  supervisor:{
+    require: true,
+  },
+  supervisor: {
     type: String,
-    default: "None"
-    },
+    default: "None",
+  },
   role: {
     type: String,
     default: "student",
