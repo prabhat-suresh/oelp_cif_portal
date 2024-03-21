@@ -43,6 +43,7 @@ export async function POST(request: NextRequest){
     return response;
 
   } catch (error: any) {
+      console.log("error yaha hai-login")
       return NextResponse.json({error: error.message}, {status: 500})
   }
 }
