@@ -54,7 +54,6 @@ const userSchema = new mongoose.Schema({
     type: Date,
   },
 });
-console.log("yolo")
 const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;
 
