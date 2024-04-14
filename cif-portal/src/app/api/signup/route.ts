@@ -5,6 +5,9 @@ import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 connect();
 
+// to do
+// 1. add email verification
+// 2. assign roles
 export async function POST(request: NextRequest) {
   try {
     const request_body = await request.json();
@@ -51,7 +54,7 @@ export async function POST(request: NextRequest) {
 }
 
 // curl command to check
-//   curl -X POST \
-//   -H "Content-Type: application/json" \
-//   -d '{"username":"test","email":"test@test.com","password":"pass"}' \
-//   http://localhost:3000/api/createuser
+// curl -X POST \
+// -H "Content-Type: application/json" \
+// -d '{"username":"test","email":"test@test.com","password":"pass"}' \
+// http://localhost:3000/api/createuser
