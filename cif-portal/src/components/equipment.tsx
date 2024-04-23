@@ -1,8 +1,9 @@
 "use client"
 import React from 'react';
-export default function equipment(props: { equipName: string, imageUrl: string, descUrl: string }) {
+
+export default function Equipment1(props: { equipName: string, imageUrl: string, descUrl: string }) {
   return <div>
-    h2{props.equipName}
+    <h2>{props.equipName}</h2>
     <img src={props.imageUrl} alt="" />
     <a href={props.descUrl}> Book Equipment </a>
   </div>

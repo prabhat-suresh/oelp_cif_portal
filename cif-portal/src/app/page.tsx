@@ -7,10 +7,16 @@ import img1 from "../../../public/TCS PS_0.jpg";
 const Home = () => {
   return (
 
-    <div className="image-with-caption">
-      <img src={"/TCS PS_0.jpg"} alt="Caption" className="image" />
-      <h1 className="caption">{"Hello there"}</h1>
-    </div>
+    <>
+      <nav>
+        <a href="/login">Login  </a>
+        <a href="/about">About  </a>
+        <a href="/equipments">Equipments</a>
+      </nav>
+      <div className="image-with-caption">
+        <img src={"/TCS PS_0.jpg"} alt="Caption" className="image" />
+      </div>
+    </>
   );
 };
 
