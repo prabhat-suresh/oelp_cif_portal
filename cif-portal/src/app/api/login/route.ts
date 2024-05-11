@@ -11,7 +11,7 @@ export async function POST(request: NextRequest) {
   try {
     const request_body = await request.json();
     const { email, password } = request_body;
-
+    console.log(request_body)
     const user = await User.findOne({ email });
     if (!user) {
       return NextResponse.json(
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
       username: user.username,
       email: user.email,
     };
-    const token = await jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
+    const token = jwt.sign(tokenData, process.env.TOKEN_SECRET!, {
       expiresIn: "1h",
     });
 
