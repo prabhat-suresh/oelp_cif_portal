@@ -3,7 +3,7 @@ import React from 'react';
 
 export default function Equipment1(props: { equipName: string, imageUrl: string, descUrl: string }) {
   return <div>
-    <h2>{props.equipName}</h2>
+    <h2><b>{props.equipName}</b></h2>
     <img src={props.imageUrl} alt="" />
     <a href={props.descUrl}> Book Equipment </a>
   </div>
