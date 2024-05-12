@@ -20,6 +20,14 @@ const equipmentSchema = new mongoose.Schema({
     type: Array<Array<Date>>,
     default: {},
   },
+  quantity: {
+    type: Number,
+    default: 1
+  },
+  labStaff: {
+    type: String,
+    required: true,
+  }
 });
 
 const Equipment =

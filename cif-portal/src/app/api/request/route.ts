@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import { connect } from "@/dbConfig/dbConfig";
 import Equipment from "@/models/equipmentModel";
 import Request from "@/models/RequestModel";
@@ -9,12 +8,12 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const req_body = await request.json();
-    const { equipmentID, email, startTime, endTime } = req_body;
+    const { equipmentID, email, startTime, endTime, projectName } = req_body;
     const equipment = await Equipment.findOne({ equipmentID });
     if (!equipment) {
       return NextResponse.json(
         { error: "Equipment not found" },
-        { status: 404 },
+        { status: 400 },
       );
     }
     if (!equipment.status) {
@@ -23,7 +22,14 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    console.log("whatupp");
+    const requestCheck = await Request.findOne({ equipmentID, email });
+    const timeCheck = await Equipment.findOne({ equipmentID, $lte: startTime, $gte: endTime } ); // TODO: confirm the working
+    if (requestCheck && timeCheck) {
+      return NextResponse.json(
+          {error: 'User already has an active request for the equipment in this time slot'},
+          { status: 400 },
+      )
+    }
     // logic for checking if the requested time slot is available
     // if not available, return timeConflict error and request user to enter new time slot
     const dateArray = equipment.timeSlots;
@@ -37,7 +43,7 @@ export async function POST(request: NextRequest) {
         (dateArray[i][1] > new Date(startTime) &&
           dateArray[i][1] <= new Date(endTime))
       ) {
-        return NextResponse.json({ error: "Time conflict" }, { status: 400 });
+        return NextResponse.json({ error: "This slot is already booked" }, { status: 400 });
       }
     }
     // insert into proper position
@@ -46,7 +52,6 @@ export async function POST(request: NextRequest) {
     await equipment.updateOne({ timeSlots: equipment.timeSlots });
     console.log("a-okay");
     const NewRequest = new Request({
-      requestID: uuidv4(),
       equipmentID,
       email,
       startTime: new Date(startTime),
@@ -63,7 +68,7 @@ export async function POST(request: NextRequest) {
     console.log(requestSaveStatus);
     return NextResponse.json({
       message: "Request created successfully",
-      success: true,
+      status: 200,
     });
     // TODO: add the above data to bookings
   } catch (error: any) {
