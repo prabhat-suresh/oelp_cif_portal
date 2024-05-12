@@ -5,7 +5,7 @@ export default function Equipment1(props: { equipName: string, imageUrl: string,
   return <div>
     <h2><b>{props.equipName}</b></h2>
     <img src={props.imageUrl} alt="" />
-    <a href={props.descUrl}> Book Equipment </a>
+    <a href={props.descUrl}> More Details </a>
   </div>
 }
 // import React from "react";

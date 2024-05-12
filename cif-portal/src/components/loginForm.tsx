@@ -5,6 +5,7 @@ import { useSearchParams, useRouter } from "next/navigation"; // Import Next.js 
 import { ChangeEvent, useState } from "react"; // Import React hooks for managing component state.
 import { POST } from "@/app/api/login/route";
 import { NextRequest } from "next/server";
+import axios from "axios";
 
 export default function LoginForm() {
   const router = useRouter(); // Initialize the Next.js router.
@@ -26,15 +27,14 @@ export default function LoginForm() {
       setFormValues({ email: "", password: "" }); // Clear form input values.
 
       // Attempt to sign in using the credentials (email and password).
-      const res = await POST(
-        new NextRequest("http://localhost:3000/login", {
-          method: "POST",
-          body: JSON.stringify({
-            email: formValues.email,
-            password: formValues.password
-          })
+      const res = await axios.post("http://localhost:3000/api/login",
+        JSON.stringify({
+          email: formValues.email,
+          password: formValues.password
         })
-      );
+      )
+        ;
+      console.log(res.data)
 
       // nextauth signIn
       // signIn("credentials", {
@@ -56,7 +56,7 @@ export default function LoginForm() {
     } catch (error: any) {
       setLoading(false); // Set loading state back to false on error.
       console.log(error);
-      setError("An error occurred. Please try again."); // Set the error message for any other errors.
+      setError("Invalid credentials"); // Set the error message for any other errors.
     }
   };
 
