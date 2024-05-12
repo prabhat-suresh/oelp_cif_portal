@@ -27,7 +27,7 @@ export default function LoginForm() {
 
       // Attempt to sign in using the credentials (email and password).
       const res = await POST(
-        new NextRequest("http://localhost:3000/login", {
+        new NextRequest("http://localhost:3000/api/login", {
           method: "POST",
           body: JSON.stringify({
             email: formValues.email,

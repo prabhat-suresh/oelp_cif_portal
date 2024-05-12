@@ -8,7 +8,8 @@ connect();
 export async function POST(request: NextRequest) {
   try {
     const req_body = await request.json();
-    const { equipmentID, email, startTime, endTime, projectName } = req_body;
+    const { email } = req_body;
+    // await
     const equipment = await Equipment.findOne({ equipmentID });
     if (!equipment) {
       return NextResponse.json(
