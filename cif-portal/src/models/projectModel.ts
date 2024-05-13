@@ -9,6 +9,11 @@ const projectSchema = new mongoose.Schema({
   projectFunds: {
     type:Number,
     default:0
+  },
+  projectAdmins: {
+    type:Array<String>,
+    default: {},
+    required:true
   }
 });
 const Project =
