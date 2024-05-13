@@ -17,13 +17,21 @@ const requestSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  projectAdminID: {
+    type: String,
+    required: true,
+  },
   PA_approval: {
     type: Boolean,
-    default: false,
+    default: null,
   },
   Staff_approval: {
     type: Boolean,
-    default: false,
+    default: null,
+  },
+  labStaffID: {
+    type: String,
+    required: true,
   },
 });
 

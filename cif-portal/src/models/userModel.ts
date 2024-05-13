@@ -53,6 +53,10 @@ const userSchema = new mongoose.Schema({
   verifyEmailExpires: {
     type: Date,
   },
+  ongoingProjects: {
+    type:Array<String>,
+    default: {},
+  },
 });
 const User = mongoose.model("User", userSchema) || mongoose.models.User;
 export default User;
