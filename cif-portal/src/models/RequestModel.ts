@@ -27,6 +27,6 @@ const requestSchema = new mongoose.Schema({
 });
 
 const Request =
-  mongoose.models.equipment || mongoose.model("request", requestSchema);
+  mongoose.models.Request || mongoose.model("request", requestSchema);
 
 export default Request;

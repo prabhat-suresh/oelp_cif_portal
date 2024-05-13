@@ -9,22 +9,23 @@ export async function POST(request: NextRequest) {
   try {
     const req_body = await request.json();
     const { equipmentID, email, startTime, endTime, projectName } = req_body;
-    const equipment = await Equipment.findOne({ equipmentID });
+    const equipment = await Equipment.findOne({ _id:equipmentID });
+    console.log(equipment)
     if (!equipment) {
       return NextResponse.json(
         { error: "Equipment not found" },
         { status: 400 },
       );
     }
-    if (!equipment.status) {
+    if (!equipment.availableQuantity) {
       return NextResponse.json(
         { error: "Equipment is not available" },
         { status: 400 },
       );
     }
     const requestCheck = await Request.findOne({ equipmentID, email });
-    const timeCheck = await Equipment.findOne({ equipmentID, $lte: startTime, $gte: endTime } ); // TODO: confirm the working
-    if (requestCheck && timeCheck) {
+    // const timeCheck = await Equipment.findOne({ equipmentID, $lte: startTime, $gte: endTime } ); // TODO: confirm the working
+    if (requestCheck) {
       return NextResponse.json(
           {error: 'User already has an active request for the equipment in this time slot'},
           { status: 400 },
@@ -54,6 +55,7 @@ export async function POST(request: NextRequest) {
     const NewRequest = new Request({
       equipmentID,
       email,
+      projectName,
       startTime: new Date(startTime),
       endTime: new Date(endTime),
     });
@@ -61,7 +63,7 @@ export async function POST(request: NextRequest) {
     const requestSaveStatus = await NewRequest.save();
     if (!requestSaveStatus) {
       return NextResponse.json(
-        { error: "Request not created" },
+        { error: "Request not saved" },
         { status: 400 },
       );
     }
