@@ -8,7 +8,7 @@ connect();
 export async function POST(req: NextRequest, res: NextResponse) {
     try {
         const req_body = await req.json();
-        const { email }: any = req_body;
+        const { email, requestID, action }: any = req_body;
         // just check if the email can take action
 
         const request_row = await Request.findOne({ requestID });

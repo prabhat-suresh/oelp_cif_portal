@@ -9,10 +9,6 @@ const equipmentSchema = new mongoose.Schema({
     type: String,
     // required: true,
   },
-  status: {
-    type: Boolean,
-    // required: true,
-  },
   description: {
     type: String,
   },
@@ -20,7 +16,15 @@ const equipmentSchema = new mongoose.Schema({
     type: Array<Array<Date>>,
     default: {},
   },
-  quantity: {
+  totalQuantity: {
+    type: Number,
+    default: 1
+  },
+  damagedQuantity: {
+    type: Number,
+    default: 0
+  },
+  availableQuantity: {
     type: Number,
     default: 1
   },
