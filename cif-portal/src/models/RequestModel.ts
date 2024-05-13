@@ -13,26 +13,22 @@ const requestSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  projectID: {
-    type: Number,
-    required: true,
-  },
-  projectAdminID: {
+  projectName: {
     type: String,
     required: true,
   },
-  PA_approval: {
+  paApproval: {
     type: Boolean,
     default: null,
   },
-  Staff_approval: {
+  staffApproval: {
     type: Boolean,
     default: null,
   },
-  labStaffID: {
-    type: String,
-    required: true,
-  },
+  status:{
+    type: Boolean,
+    default: false
+  }
 });
 
 const Request =

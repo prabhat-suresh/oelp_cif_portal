@@ -25,8 +25,9 @@ const equipmentSchema = new mongoose.Schema({
     default: 1
   },
   labStaff: {
-    type: String,
+    type: Array<String>,
     required: true,
+    default: {},
   }
 });
 

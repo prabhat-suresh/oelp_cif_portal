@@ -1,13 +1,6 @@
 import mongoose from "mongoose";
 const Role = ["student", "faculty", "labStaff"];
 const userSchema = new mongoose.Schema({
-  username: {
-    type: String,
-    required: true,
-    unique: true,
-    min: 3,
-    max: 20,
-  },
   email: {
     type: String,
     required: true,
@@ -23,23 +16,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     unique: true,
     min: 10,
-    max: 13,
   },
   department: {
     type: String,
     require: true,
   },
-  supervisor: {
-    type: Array,
-    default: [],
-  },
   role: {
     type: String,
     default: "student",
-  },
-  isVerified: {
-    type: Boolean,
-    default: false,
   },
   forgotPasswordtoken: {
     type: String,
@@ -47,16 +31,23 @@ const userSchema = new mongoose.Schema({
   forgotPasswordExpires: {
     type: Date,
   },
-  verifyEmailToken: {
-    type: String,
-  },
-  verifyEmailExpires: {
-    type: Date,
-  },
-  ongoingProjects: {
-    type:Array<String>,
+
+  // for student and maybe faculty?
+  workingOnProjects: {
+    type: Array<String>,
     default: {},
   },
+
+  // for faculty only
+  // headingProjects: {
+  //   type:Array<String>,
+  //   default: {},
+  // },
+  // fpr lab staff only
+  // equipmentsUnderSupervision: {
+  //   type: Array<String>,
+  //   default: {}
+  // }
 });
 const User = mongoose.model("User", userSchema) || mongoose.models.User;
 export default User;
