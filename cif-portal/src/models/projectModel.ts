@@ -7,13 +7,13 @@ const projectSchema = new mongoose.Schema({
     min: 3,
   },
   projectFunds: {
-    type:Number,
-    default:0
+    type: Number,
+    default: 0
   },
   projectAdmins: {
-    type:Array<String>,
+    type: Array<String>,
     default: {},
-    required:true
+    required: true
   }
 });
 const Project =

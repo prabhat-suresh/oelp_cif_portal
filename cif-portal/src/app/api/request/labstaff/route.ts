@@ -1,7 +1,7 @@
 import { connect } from "@/dbConfig/dbConfig";
 import Request from "@/models/RequestModel";
 import User from "@/models/userModel";
-import Project from "@/models/projectModel";
+import Equipment from "@/models/equipmentModel";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 connect();
@@ -20,15 +20,15 @@ export async function POST(req: NextRequest, res: NextResponse) {
         if (user_role != "faculty") {
             return NextResponse.json({ "status": 400, "message": "User does not have authorization." });
         }
-        const projects = await Project.find({ projectAdmins: email })
-        const requests = await Request.find({ paApproval: null, projectName: { $in: projects.map(project => project.projectName) } })
+        const equipments = await Equipment.find({ labStaff: email })
+        const requests = await Request.find({ staffApproval: null, paApproval: true, equipmentID: { $in: equipments.map(equipment => equipment.equipmentName) } })
 
         const ret: any = {}
         for (let req of requests) {
-            ret[req.projectName] = []
+            ret[req.equipmentName] = []
         }
         for (let req of requests) {
-            ret[req.projectName].push(req)
+            ret[req.equipmentName].push(req)
         }
 
         return NextResponse.json({ "status": 200, "message": "Filtered requests successfully", pendingRequests: ret })

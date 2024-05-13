@@ -29,7 +29,7 @@ export default async function Equipment({
         return (
             <div>
                 {equipment_details.filter((element, index, array) => params.equipName == element.equipmentName.replaceAll(" ", "%20")).map(equipment => (
-                    <div><EquipmentDesc {...{ equipName: equipment.equipmentName, imageUrl: "/" + equipment.equipmentName + ".jpeg", descUrl: "./" + equipment.equipmentName + "/equipmentBooking" }} /></div>
+                    <div><EquipmentDesc {...{ equipName: equipment.equipmentName, imageUrl: "/" + equipment.equipmentName + ".jpeg", description: equipment.description, bookUrl: "./" + equipment.equipmentName + "/equipmentBooking", availableQuantity: equipment.availableQuantity }} /></div>
                 ))}
             </div>
         );
