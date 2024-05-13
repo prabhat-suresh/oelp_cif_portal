@@ -37,17 +37,6 @@ const userSchema = new mongoose.Schema({
     type: Array<String>,
     default: {},
   },
-
-  // for faculty only
-  // headingProjects: {
-  //   type:Array<String>,
-  //   default: {},
-  // },
-  // fpr lab staff only
-  // equipmentsUnderSupervision: {
-  //   type: Array<String>,
-  //   default: {}
-  // }
 });
-const User = mongoose.model("User", userSchema) || mongoose.models.User;
+const User = mongoose.models.User || mongoose.model("User", userSchema);
 export default User;

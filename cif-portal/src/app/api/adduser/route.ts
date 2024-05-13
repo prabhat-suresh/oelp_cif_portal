@@ -5,44 +5,40 @@ import { NextResponse } from "next/server";
 import bcryptjs from "bcryptjs";
 connect();
 
-// to do
-// 1. add email verification
-// 2. assign roles
 export async function POST(request: NextRequest) {
   try {
     const request_body = await request.json();
 
     // log
     console.log(request_body);
-    const { username, email, password, mobile, department } = request_body;
-
+    const { email, mobile, department, role } = request_body;
     // check if user already exists
     const user = await User.findOne({ email });
-
     if (user) {
       return NextResponse.json(
-        { error: "User already exists" },
+        { error: "User with given email already exists" },
         { status: 400 },
       );
     }
+    const password = mobile+email;
     // hash password
     const salt = await bcryptjs.genSalt(12);
     const hashedPassword = await bcryptjs.hash(password, salt);
 
     // create user
     const newUser = new User({
-      username,
       email,
       password: hashedPassword,
       mobile: mobile,
       department: department,
+      role: role
     });
     // save the user
     const savedUser = await newUser.save();
 
     // log
     console.log(savedUser);
-
+    // TODO: Mail the user the password and an option to change it.
     return NextResponse.json({
       message: "User created successfully",
       success: true,

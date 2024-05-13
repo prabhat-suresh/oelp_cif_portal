@@ -1,12 +1,7 @@
 import mongoose from "mongoose";
 const requestSchema = new mongoose.Schema({
-  requestID: {
-    type: String,
-    required: true,
-    unique: true,
-  },
   equipmentID: {
-    type: Number,
+    type: String,
     required: true,
   },
   email: {

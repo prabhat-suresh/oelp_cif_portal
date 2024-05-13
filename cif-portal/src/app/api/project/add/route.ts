@@ -5,35 +5,41 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 connect();
 
+/*
+* POST req: {email, projectName, projectFunds}
+*      res: {status, message}
+* */
 export async function POST(request: NextRequest) {
   try {
     const req_body = await request.json();
-    const { email, projectName, projectFunds } = req_body; // TODO: check email belongs to faculty
+    const { email, projectName, projectFunds } = req_body;
     const current_user = await User.findOne({ email });
+    console.log(current_user);
 
-    if (!current_user) {
-        return NextResponse.json({"status":500, "message": "Didn't find user in database"})
-    }
 
-    if (current_user.role != "faculty") {
-        return NextResponse.json({"status":400, "message": "User does not have authorization"})
-    } else {
-        const new_project = new Project({
-            projectName, projectFunds
+    if (!current_user || current_user.role != 'faculty') {
+        return NextResponse.json({
+            message: "User does not have authorization",
+            status:400
         })
-        // adding project to user table of faculty
-        const update_response = User.findByIdAndUpdate(
-        email,
-          { $push: { ongoingProjects: projectName } },
-          (err: any, updatedUser:any) => {
-            if (err) {
-              console.error('Error updating user:', err);
-            } else {
-              console.log('Updated user:', updatedUser);
-            }
-          });
     }
+    const project = await Project.findOne({projectName});
+    if(project) {
+        return NextResponse.json({
+            message: "Project already exists",
+            status: 400,
+        })
+    }
+    const new_project = new Project({
+        projectName, projectFunds, projectAdmins:[email]
+    })
+    await new_project.save();
 
+    return NextResponse.json({
+        message: "Project created successfully",
+        status: 200,
+        success: true
+    })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
