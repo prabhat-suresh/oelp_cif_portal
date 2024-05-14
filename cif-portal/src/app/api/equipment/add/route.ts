@@ -13,9 +13,8 @@ export async function POST(request: NextRequest) {
     const currentUser = await User.findOne({ email })
     if(!currentUser || currentUser.role != "labStaff") {
       return NextResponse.json({
-        message: "User not authorized to add equipments",
+        message: "User not authorized to add equipments"},{
         status: 400,
-        success: false
       })
     }
     const findEquipment = await Equipment.findOne({ equipmentName })
@@ -32,8 +31,7 @@ export async function POST(request: NextRequest) {
       findEquipment.availableQuantity = findEquipment.availableQuantity+1;
       await findEquipment.save();
       return NextResponse.json({
-        message: "Equipment quantity updated",
-        success: true,
+        message: "Equipment quantity updated"},{
         status:200
       })
     }
@@ -41,8 +39,7 @@ export async function POST(request: NextRequest) {
 
     if (savedEquipment) {
       return NextResponse.json({
-        message: "Equipment created successfully",
-        success: true,
+        message: "Equipment created successfully"},{
         status: 200,
       });
     }

@@ -129,8 +129,9 @@ export async function POST(request: NextRequest) {
     }
     console.log(requestSaveStatus);
     return NextResponse.json({
-      message: "Request created successfully",
-      status: 200,
+      message: "Request created successfully"},
+    {
+      status: 200
     });
     // TODO: add the above data to equipment time slots
   } catch (error: any) {

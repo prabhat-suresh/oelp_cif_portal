@@ -14,11 +14,11 @@ export async function POST(req: NextRequest, res: NextResponse) {
 
         const user_row = await User.findOne({ email });
         if (!user_row) {
-            return NextResponse.json({ "status": 400, "message": "User not found" });
+            return NextResponse.json({message: "User not found"},{ status: 400 });
         }
         const user_role = user_row.role;
         if (user_role != "faculty") {
-            return NextResponse.json({ "status": 400, "message": "User does not have authorization." });
+            return NextResponse.json({message: "User does not have authorization." }, { status: 400} );
         }
         const equipments = await Equipment.find({ labStaff: email })
         const requests = await Request.find({ staffApproval: null, paApproval: true, equipmentID: { $in: equipments.map(equipment => equipment.equipmentName) } })
@@ -31,9 +31,9 @@ export async function POST(req: NextRequest, res: NextResponse) {
             ret[req.equipmentName].push(req)
         }
 
-        return NextResponse.json({ "status": 200, "message": "Filtered requests successfully", pendingRequests: ret })
+        return NextResponse.json({message: "Filtered requests successfully", "pendingRequests": ret},{ status: 200})
 
     } catch (error: any) {
-        return NextResponse.json({ "status": 500, "error": error.message })
+    return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

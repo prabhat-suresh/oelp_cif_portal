@@ -11,48 +11,51 @@ export async function POST(request: NextRequest) {
         const currentUser = await User.findOne({email});
         if(!currentUser || currentUser.role != 'faculty') {
             return NextResponse.json({
-                status: 400,
                 message: "User does not have authorization to add students"
-            });
+            },{
+                status: 400},);
         }
         const project = await Project.findOne({projectName});
         if(!project) {
             return NextResponse.json({
-                status: 400,
                 message: "Invalid project name"
-            })
+            },{
+                status: 400},)
         }
         if (!project.projectAdmins.includes(email)){
-            return NextResponse.json({
-                status: 400,
+            return NextResponse.json(
+                {
                 message: "User does not have admin access to the given project"
-            });
+                },
+                {
+                status: 400
+                }
+            );
         }
 
         const student = await User.findOne({email:studentEmail});
         if(!student || student.role != 'student'){
             return NextResponse.json({
+                message: "User is not registered on the portal or the user is not a student"},{
                 status: 400,
-                message: "User is not registered on the portal or the user is not a student"
             })
         }
         if(student.workingOnProjects.includes(project.projectName)) {
             return NextResponse.json({
+                message: "Student is already part of the project"},{
                 status: 400,
-                message: "Student is already part of the project"
+
             })
         }
         student.workingOnProjects.push(project.projectName);
         console.log(student.workingOnProjects);
         await student.save();
         return NextResponse.json({
-            status: 200,
             message: "Student added to the project successfully"
+        },{
+            status: 200,
         })
     } catch (error : any) {
-        return NextResponse.json({
-            status: 500,
-            error: error.message
-        })
+            return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }

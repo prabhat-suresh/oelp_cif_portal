@@ -5,30 +5,37 @@ import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 connect();
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
     try {
         const req_body = await req.json();
-        const { email, requestID, action }: any = req_body;
+        const {email, requestID, action}: any = req_body;
         // just check if the email can take action
 
-        const user_row = await User.findOne({ email });
-        if (!user_row) {
-            return NextResponse.json({ "status": 500, "message": "Internal server error" });
+        const current_user = await User.findOne({email});
+        if (!current_user) {
+            return NextResponse.json( {message: "Internal server error while fetching user"}, {status: 500});
         }
-        const user_role = user_row.role;
+        const user_role = current_user.role;
+        console.log(user_role)
         if (user_role == "faculty") {
-            const request_row = await Request.findOneAndUpdate({ requestID }, { paApproval: action });
-        }
-        else if (user_role == "staff") {
-            const request_row = await Request.findOneAndUpdate({ requestID }, { staffApproval: action });
-        }
-        else {
-            return NextResponse.json({ "status": 400, "message": "User does not have authorization." });
+            const request_row = await Request.findOne({_id:requestID});
+            request_row.paApproval = action;
+            await request_row.save();
+        } else if (user_role == "labStaff") {
+            const request_row = await Request.findOne({_id:requestID});
+            console.log(request_row);
+            request_row.staffApproval = action;
+            request_row.status=true;
+            await request_row.save();
+            // TODO: Trigger to cancel all requests for same slot.
+        } else {
+            return NextResponse.json({message: "User does not have authorization."}, {status: 400} );
         }
 
-        return NextResponse.json({ "status": 200, "message": "Request Approved" });
+        return NextResponse.json({message: "Request Approved"}, {status: 200});
 
     } catch (error: any) {
-        return NextResponse.json({ "status": 500, "error": error.message })
+            return NextResponse.json({ error: error.message }, { status: 500 });
+
     }
 }

@@ -18,20 +18,20 @@ export async function POST(request: NextRequest) {
 
     if (!current_user || current_user.role != 'faculty') {
         return NextResponse.json({
-            message: "User does not have authorization",
+            message: "User does not have authorization"},{
             status:400
         })
     }
     const new_admin = await User.findOne({email: newAdminMail});
     if(!new_admin) {
         return NextResponse.json({
-            message: "Given mail is not registered on portal",
+            message: "Given mail is not registered on portal"},{
             status: 400
         })
     }
     if (new_admin.role != 'faculty') {
         return NextResponse.json({
-            message: "Given mail doesn't belong to a faculty",
+            message: "Given mail doesn't belong to a faculty"},{
             status: 400
         })
     }
@@ -39,28 +39,27 @@ export async function POST(request: NextRequest) {
       console.log(project)
     if(!project) {
         return NextResponse.json({
-            message: "Project does not exist",
+            message: "Project does not exist"},{
             status: 400
         })
     }
     if(!project.projectAdmins.includes(email)) {
         return NextResponse.json({
-            message: "User does not have admin access to this project",
+            message: "User does not have admin access to this project"},{
             status: 400,
         })
     }
     if(project.projectAdmins.includes(newAdminMail)) {
         return NextResponse.json({
-            message: "User already an admin for this project",
+            message: "User already an admin for this project"},{
             status: 400
         })
     }
     project.projectAdmins.push(newAdminMail);
     await project.save();
     return NextResponse.json({
-        message: "Admin added successfully",
+        message: "Admin added successfully"},{
         status: 200,
-        success: true
     })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

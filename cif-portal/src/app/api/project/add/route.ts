@@ -19,14 +19,14 @@ export async function POST(request: NextRequest) {
 
     if (!current_user || current_user.role != 'faculty') {
         return NextResponse.json({
-            message: "User does not have authorization",
+            message: "User does not have authorization"},{
             status:400
         })
     }
     const project = await Project.findOne({projectName});
     if(project) {
         return NextResponse.json({
-            message: "Project already exists",
+            message: "Project already exists"},{
             status: 400,
         })
     }
@@ -36,9 +36,8 @@ export async function POST(request: NextRequest) {
     await new_project.save();
 
     return NextResponse.json({
-        message: "Project created successfully",
+        message: "Project created successfully"},{
         status: 200,
-        success: true
     })
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

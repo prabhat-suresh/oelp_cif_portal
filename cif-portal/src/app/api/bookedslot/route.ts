@@ -9,8 +9,9 @@ export async function POST(request: NextRequest) {
         const { date, equipmentID } = req_body;
         if (!date || !equipmentID) {
             return NextResponse.json({
-                status: 400,
                 error: "Insufficient inputs provided"
+                },{
+                status: 400
             })
         }
         // Convert date string to Date object
@@ -55,13 +56,15 @@ export async function POST(request: NextRequest) {
         console.log(sameDayRequests);
 
         return NextResponse.json({
-            status: 200,
-            request_list: sameDayRequests
+            "request_list": sameDayRequests,
+            },{
+            status: 200
         });
     } catch (error: any) {
         return NextResponse.json({
-            status: 500,
-            error: error.message
+             error: error.message
+            },{
+            status: 500
         });
     }
 }

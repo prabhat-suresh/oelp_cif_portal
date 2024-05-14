@@ -40,8 +40,7 @@ export async function POST(request: NextRequest) {
     console.log(savedUser);
     // TODO: Mail the user the password and an option to change it.
     return NextResponse.json({
-      message: "User created successfully",
-      success: true,
+      message: "User created successfully"},{
       status: 201,
     });
   } catch (error: any) {
