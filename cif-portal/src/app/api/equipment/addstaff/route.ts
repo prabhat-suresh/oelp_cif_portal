@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 
     if (!current_user || current_user.role != 'labStaff') {
         return NextResponse.json({
-            message: "User does not have authorization"},{
+            message: "User does not have authorization", status: 400},{
             status:400
         })
     }
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     console.log(new_staff)
     if(!new_staff) {
         return NextResponse.json({
-            message: "Given email is not registered on portal"},{
+            message: "Given email is not registered on portal", status: 400},{
             status: 400
         })
     }
@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
     if (new_staff.role != 'labStaff') {
 
         return NextResponse.json({
-            message: "Given email doesn't belong to a lab staff"},{
+            message: "Given email doesn't belong to a lab staff", status: 400},{
             status: 400
         })
     }
@@ -42,29 +42,29 @@ export async function POST(request: NextRequest) {
     console.log(equipment)
     if(!equipment) {
         return NextResponse.json({
-            message: "Equipment does not exist"},{
+            message: "Equipment does not exist", status: 400},{
             status: 400
         })
     }
     if(!equipment.labStaff.includes(email)) {
         return NextResponse.json({
-            message: "User does not have admin access to this equipment"},{
+            message: "User does not have admin access to this equipment", status: 400},{
             status: 400,
         })
     }
     if(equipment.labStaff.includes(newStaffMail)) {
         return NextResponse.json({
-            message: "User is already an admin for this equipment"},{
+            message: "User is already an admin for this equipment", status: 400},{
             status: 400
         })
     }
     equipment.labStaff.push(newStaffMail);
     await equipment.save();
     return NextResponse.json({
-        message: "Lab staff added successfully for the project"},{
+        message: "Lab staff added successfully for the project", status: 200},{
         status: 200,
     })
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message, status: 500 }, { status: 500 });
   }
 }

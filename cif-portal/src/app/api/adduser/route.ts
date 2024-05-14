@@ -16,7 +16,7 @@ export async function POST(request: NextRequest) {
     const user = await User.findOne({ email });
     if (user) {
       return NextResponse.json(
-        { error: "User with given email already exists" },
+        { error: "User with given email already exists", status: 400 },
         { status: 400 },
       );
     }
@@ -40,11 +40,11 @@ export async function POST(request: NextRequest) {
     console.log(savedUser);
     // TODO: Mail the user the password and an option to change it.
     return NextResponse.json({
-      message: "User created successfully"},{
-      status: 201,
+      message: "User created successfully", status: 200},{
+      status: 200,
     });
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message, status: 500 }, { status: 500 });
   }
 }
 

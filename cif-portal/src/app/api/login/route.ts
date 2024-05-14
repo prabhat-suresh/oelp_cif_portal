@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 
     const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
-      return NextResponse.json({ error: "Invalid password" }, { status: 400 });
+      return NextResponse.json({ error: "Invalid password", status: 400 }, { status: 400 });
     }
     console.log(user);
 
@@ -36,9 +36,9 @@ export async function POST(request: NextRequest) {
     });
 
     const response = NextResponse.json({
-      message: "Login successful",
-      success: true,
-    });
+      message: "Login successful", status:200
+    }, {status: 200}
+    );
     response.cookies.set("token", token, {
       httpOnly: true,
     });

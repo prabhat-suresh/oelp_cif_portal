@@ -19,14 +19,14 @@ export async function POST(request: NextRequest) {
 
     if (!current_user || current_user.role != 'faculty') {
         return NextResponse.json({
-            message: "User does not have authorization"},{
+            message: "User does not have authorization", status: 400},{
             status:400
         })
     }
     const project = await Project.findOne({projectName});
     if(project) {
         return NextResponse.json({
-            message: "Project already exists"},{
+            message: "Project already exists", status: 400},{
             status: 400,
         })
     }

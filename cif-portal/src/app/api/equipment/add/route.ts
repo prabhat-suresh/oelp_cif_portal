@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
     const currentUser = await User.findOne({ email })
     if(!currentUser || currentUser.role != "labStaff") {
       return NextResponse.json({
-        message: "User not authorized to add equipments"},{
+        message: "User not authorized to add equipments", status: 400},{
         status: 400,
       })
     }
@@ -30,20 +30,16 @@ export async function POST(request: NextRequest) {
       findEquipment.totalQuantity = findEquipment.totalQuantity+1;
       findEquipment.availableQuantity = findEquipment.availableQuantity+1;
       await findEquipment.save();
-      return NextResponse.json({
-        message: "Equipment quantity updated"},{
-        status:200
-      })
     }
     const savedEquipment = await equipment.save();
 
     if (savedEquipment) {
       return NextResponse.json({
-        message: "Equipment created successfully"},{
+        message: "Equipment created successfully", status: 200},{
         status: 200,
       });
     }
   } catch (error: any) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    return NextResponse.json({ error: error.message, status: 500 }, { status: 500 });
   }
 }

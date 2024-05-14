@@ -12,7 +12,7 @@ export async function POST(request: NextRequest) {
         const { equipmentID, email } = req_body;
         if (!equipmentID || !email) {
             return NextResponse.json({
-                error: "Insufficient inputs provided"},{
+                error: "Insufficient inputs provided",  status: 400},{
                 status: 400
             });
         }
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
         console.log(current_user);
         if (!current_user || current_user.role != 'labStaff') {
             return NextResponse.json({
-                error: "User does not have authorization"},{
+                error: "User does not have authorization", status: 400},{
                 status: 400
             });
         }
@@ -30,12 +30,12 @@ export async function POST(request: NextRequest) {
         console.log(equipment)
         if (!equipment) {
             return NextResponse.json({
-                error: "Equipment does not exist"},{
+                error: "Equipment does not exist", status: 400},{
                 status: 400
             });
         }
         if(!equipment.labStaff.includes(email)) {
-            return NextResponse.json({error: "User does not have update permission for the given equipment"}, {status: 400})
+            return NextResponse.json({error: "User does not have update permission for the given equipment", status: 400}, {status: 400})
         }
         equipment.damagedQuantity++;
         if (equipment.availableQuantity > 0) {
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
         }
         const equipmentSaveStatus = await equipment.save();
         if(!equipmentSaveStatus) {
-            return NextResponse.json({error: "Error occurred while updating equipment details"}, {status: 500})
+            return NextResponse.json({error: "Error occurred while updating equipment details", status: 400}, {status: 500})
         }
         const request_for_equip = await Request.find({ equipmentID: equipment._id, status: null });
         for (const pendingRequest of request_for_equip) {
@@ -54,20 +54,20 @@ export async function POST(request: NextRequest) {
         const saveStatus = await Promise.all(request_for_equip.map(req => req.save()));
         if (!saveStatus.every(status => status)) {
             return NextResponse.json({
-                error: "Database error occurred while rejecting requests"},{
+                error: "Database error occurred while rejecting requests", status: 500},{
                 status: 500
             });
         }
 
         return NextResponse.json({
-            message: "Equipment status changed successfully"
+            message: "Equipment status changed successfully", status: 200
         }, {
             status: 200
         });
     } catch (error) {
         console.error(error);
         return NextResponse.json({
-            error: "Internal server error"},{
+            error: "Internal server error", status: 500},{
             status: 500
         });
     }

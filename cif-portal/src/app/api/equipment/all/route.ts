@@ -7,8 +7,8 @@ connect();
 export async function GET() {
   try {
       const equipment = await Equipment.find();
-      return NextResponse.json({"equipment_details": equipment},{status: 200});
+      return NextResponse.json({"equipment_details": equipment, status: 200},{status: 200});
   } catch (error) {
-      return NextResponse.json({ message: error}, { status: 500 });
+      return NextResponse.json({ error: error, status:500}, { status: 500 });
   }
 }

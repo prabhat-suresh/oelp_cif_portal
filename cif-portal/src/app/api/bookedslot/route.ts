@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
         const { date, equipmentID } = req_body;
         if (!date || !equipmentID) {
             return NextResponse.json({
-                error: "Insufficient inputs provided"
+                error: "Insufficient inputs provided", status: 400
                 },{
                 status: 400
             })
@@ -56,13 +56,13 @@ export async function POST(request: NextRequest) {
         console.log(sameDayRequests);
 
         return NextResponse.json({
-            "request_list": sameDayRequests,
+            "request_list": sameDayRequests, status: 200
             },{
             status: 200
         });
     } catch (error: any) {
         return NextResponse.json({
-             error: error.message
+             error: error.message, status: 500
             },{
             status: 500
         });
