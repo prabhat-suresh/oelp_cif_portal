@@ -3,7 +3,6 @@ import React from "react"
 import Equipment1 from "@/components/equipment"
 import axios from "axios";
 // import Equipment from "@/models/equipmentModel";
-import { GET } from "@/app/api/equipment/all/route"
 
 export default async function Equipments() {
     try {

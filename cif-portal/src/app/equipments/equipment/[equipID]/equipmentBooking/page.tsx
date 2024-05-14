@@ -70,14 +70,14 @@ export default function Booking({ params }: { params: { equipID: string } }) {
             <h3><b>Pick Start Time:</b></h3>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['TimePicker']}>
-                    <TimePicker />
+                    <TimePicker ampm={false} />
                 </DemoContainer>
             </LocalizationProvider>
 
             <h3><b>Pick End Time:</b></h3>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DemoContainer components={['TimePicker']}>
-              <TimePicker />
+                    <TimePicker ampm={false} />
                 </DemoContainer>
             </LocalizationProvider>
         </div>

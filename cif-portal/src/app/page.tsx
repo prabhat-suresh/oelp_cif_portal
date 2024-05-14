@@ -1,17 +1,30 @@
 "use client"
 import React from "react";
-import "./globals.css"
-//import Image from "react-image-resizer";
-import img1 from "../../../public/TCS PS_0.jpg";
+import "./globals.css";
 
 const Home = () => {
   return (
-
     <>
-      <nav>
-        <a href="/login">Login  </a>
-        <a href="/about">About  </a>
-        <a href="/equipments">Equipments</a>
+      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+        <div className="container">
+          <a className="navbar-brand" href="/">
+            <b>CIF PORTAL</b>
+          </a>
+          <div className="navbar-nav">
+            <a className="nav-link me-3" href="/login">
+              <u>Login</u>
+            </a>
+            <a className="nav-link me-3" href="/about">
+              <u>About</u>
+            </a>
+            <a className="nav-link me-3" href="/equipments">
+              <u>Equipments</u>
+            </a>
+            <a className="nav-link" href="/pendingRequests">
+              <u>Pending Requests</u>
+            </a>
+          </div>
+        </div>
       </nav>
       <div className="image-with-caption">
         <img src={"/TCS PS_0.jpg"} alt="Caption" className="image" />
