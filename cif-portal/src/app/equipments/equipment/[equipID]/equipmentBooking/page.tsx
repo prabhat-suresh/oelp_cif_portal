@@ -7,10 +7,13 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo'; // Assuming you're using a custom DemoContainer
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { Button, Snackbar } from '@mui/material';
 
 export default function Booking({ params }: { params: { equipID: string } }) {
     const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
     const [requestList, setRequestList] = useState([]);
+    const [popupMessage, setPopupMessage] = useState('');
+    const [openPopup, setOpenPopup] = useState(false);
 
     useEffect(() => {
         const fetchRequestList = async () => {
@@ -32,6 +35,23 @@ export default function Booking({ params }: { params: { equipID: string } }) {
 
         fetchRequestList();
     }, [selectedDate, params.equipID]);
+
+    const handleSubmitRequest = async () => {
+        try {
+            const response = await axios.post("http://localhost:3000/api/request", {
+                date: selectedDate.format('YYYY-MM-DD'),
+                equipmentID: params.equipID
+            });
+            if (response.data && response.data.status === 200) {
+                setPopupMessage(response.data.message);
+            } else {
+                setPopupMessage(response.data.error || "Unknown error occurred");
+            }
+        } catch (error: any) {
+            setPopupMessage("Error submitting request: " + error.message);
+        }
+        setOpenPopup(true);
+    };
 
     return (
         <div style={{ textAlign: 'center' }}>
@@ -56,8 +76,8 @@ export default function Booking({ params }: { params: { equipID: string } }) {
                         <tbody>
                             {requestList.map((request, index) => (
                                 <tr key={index}>
-                                    <td>{dayjs(request.startTime).format('YYYY-MM-DD HH:mm:ss')}</td>
-                                    <td>{dayjs(request.endTime).format('YYYY-MM-DD HH:mm:ss')}</td>
+                                    <td>{dayjs(request.startTime).format('YYYY-MM-DD HH:mm')}</td>
+                                    <td>{dayjs(request.endTime).format('YYYY-MM-DD HH:mm')}</td>
                                 </tr>
                             ))}
                         </tbody>
@@ -67,19 +87,34 @@ export default function Booking({ params }: { params: { equipID: string } }) {
                 )}
             </div>
             <h2><b>Book Slot</b></h2>
-            <h3><b>Pick Start Time:</b></h3>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['TimePicker']}>
-                    <TimePicker ampm={false} />
-                </DemoContainer>
-            </LocalizationProvider>
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+                <div style={{ marginRight: '20px' }}>
+                    <h3><b>Pick Start Time:</b></h3>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                            <TimePicker ampm={false} />
+                        </DemoContainer>
+                    </LocalizationProvider>
+                </div>
 
-            <h3><b>Pick End Time:</b></h3>
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DemoContainer components={['TimePicker']}>
-                    <TimePicker ampm={false} />
-                </DemoContainer>
-            </LocalizationProvider>
+                <div>
+                    <h3><b>Pick End Time:</b></h3>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DemoContainer components={['TimePicker']}>
+                            <TimePicker ampm={false} />
+                        </DemoContainer>
+                    </LocalizationProvider>
+                </div>
+            </div>
+            <Button variant="contained" onClick={handleSubmitRequest} style={{ backgroundColor: '#1976d2', color: '#fff' }}>
+                Submit Request
+            </Button>
+            <Snackbar
+                open={openPopup}
+                autoHideDuration={6000}
+                onClose={() => setOpenPopup(false)}
+                message={popupMessage}
+            />
         </div>
     );
 }
