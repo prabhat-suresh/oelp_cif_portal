@@ -7,29 +7,18 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 connect();
 
-function maxDate(start_1 : Date, start_2 : Date) {
-  if(start_1 > start_2) {
-    return start_1;
-  } else {
-    return start_2;
-  }
-}
-function minDate(start_1 : Date, start_2 : Date) {
-  if(start_1 < start_2) {
-    return start_1;
-  } else {
-    return start_2;
-  }
-}
-// TODO: FIX THIS!!!!!!
-async function overLaps(startTime: Date, endTime: Date, email: String) {
+async function overLaps(startTime: Date, endTime: Date, all_req : any) {
     // Iterate over each entry in the Request document
-  const all_req = await Request.find({ email })
+  const arg_end = Number( new Date(endTime));
+  const arg_start = Number(new Date(startTime))
+
 
   for (const entry of all_req) {
       // Check for overlap of arg with every request of user
-    console.log(startTime, endTime, entry.startTime, entry.endTime);
-    if (!(endTime <= entry.startTime || startTime >= entry.endTime)) {
+    let startDB = Number( new Date(entry.startTime));
+    let endDB = Number(new Date(entry.endTime));
+    console.log(startTime, endTime, startDB, endDB);
+    if (!(arg_end <= startDB || arg_start >= endDB)) {
             // If there's an overlap, return true
             return true;
         }
@@ -82,19 +71,29 @@ export async function POST(request: NextRequest) {
     }
     const requestCheck = await Request.findOne({ equipmentID, email, startTime, endTime });
     console.log("requestCheck ", requestCheck);
-    console.log("overlaps ", await overLaps(startTime, endTime, email))
-    // const timeCheck = await Equipment.findOne({ equipmentID, $lte: startTime, $gte: endTime } ); // TODO: confirm the working
-    if (requestCheck  /*||await overLaps(startTime, endTime, email)*/) {
+    if (requestCheck) {
       return NextResponse.json(
           {error: 'User already has an active request for the equipment in this time slot'},
           { status: 400 },
       )
     }
+    const all_req = await Request.find({ email });
+    if(all_req) {
+      const overlap = await overLaps(startTime, endTime, all_req);
+      console.log("overlaps ", overlap);
+      if(overlap) {
+        return NextResponse.json({
+          status: 400,
+          message: "User already has an active request in this duration"
+        })
+      }
+    }
+
     // logic for checking if the requested time slot is available
     // if not available, return timeConflict error and request user to enter new time slot
-    const dateArray = await Request.find({email});
-    // date array will always be sorted
-    // can be improved using binary search
+    const dateArray = equipment.timeSlots;
+    // // date array will always be sorted
+    // // can be improved using binary search
     let i = 0;
     for (; i < dateArray.length && dateArray[i][0] > new Date(startTime); i++) {
       if (

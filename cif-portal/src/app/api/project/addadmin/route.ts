@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
             status:400
         })
     }
-    const new_admin = await User.findOne({newAdminMail});
+    const new_admin = await User.findOne({email: newAdminMail});
     if(!new_admin) {
         return NextResponse.json({
             message: "Given mail is not registered on portal",

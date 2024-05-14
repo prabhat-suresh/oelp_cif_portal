@@ -6,8 +6,13 @@ connect();
 export async function POST(request: NextRequest) {
     try {
         const req_body = await request.json();
-        const { date } = req_body;
-
+        const { date, equipmentID } = req_body;
+        if (!date || !equipmentID) {
+            return NextResponse.json({
+                status: 400,
+                error: "Insufficient inputs provided"
+            })
+        }
         // Convert date string to Date object
         const queryDate = new Date(date);
 
@@ -24,6 +29,8 @@ export async function POST(request: NextRequest) {
             },
             {
                 $match: {
+                    status: true,
+                    equipmentID: equipmentID,
                     $expr: {
                         $and: [
                             { $eq: [{ $dayOfMonth: queryDate }, '$startDay'] },
@@ -34,7 +41,14 @@ export async function POST(request: NextRequest) {
                             { $eq: ['$startYear', '$endYear'] },
                         ],
                     },
-                },
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    startTime: 1,
+                    endTime: 1,
+                }
             }
         ]);
 
