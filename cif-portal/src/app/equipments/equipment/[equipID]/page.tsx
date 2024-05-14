@@ -10,7 +10,7 @@ import { GET } from "@/app/api/equipment/all/route"
 export default async function Equipment({
     params,
 }: {
-    params: { equipName: string };
+    params: { equipID: string };
 }) {
     // const params = useParams<{ equipName: string }>();
     // console.log(params)
@@ -28,8 +28,8 @@ export default async function Equipment({
         const equipment_details = dat.equipment_details
         return (
             <div>
-                {equipment_details.filter((element, index, array) => params.equipName == element.equipmentName.replaceAll(" ", "%20")).map(equipment => (
-                    <div><EquipmentDesc {...{ equipName: equipment.equipmentName, imageUrl: "/" + equipment.equipmentName + ".jpeg", description: equipment.description, bookUrl: "./" + equipment.equipmentName + "/equipmentBooking", availableQuantity: equipment.availableQuantity }} /></div>
+                {equipment_details.filter((element, index, array) => params.equipID == element._id).map(equipment => (
+                    <div><EquipmentDesc {...{ equipName: equipment.equipmentName, imageUrl: `/${equipment.equipmentName}.jpeg`, description: equipment.description, bookUrl: `./${equipment._id}/equipmentBooking`, availableQuantity: equipment.availableQuantity }} /></div>
                 ))}
             </div>
         );

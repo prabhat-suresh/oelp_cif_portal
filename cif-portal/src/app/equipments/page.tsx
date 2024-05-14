@@ -19,7 +19,7 @@ export default async function Equipments() {
         return (
             <div>
                 {equipment_details.map(equipment => (
-                    <div><Equipment1 {...{ equipName: equipment.equipmentName, imageUrl: "/" + equipment.equipmentName + ".jpeg", descUrl: "./equipments/equipment/" + equipment.equipmentName }} /></div>
+                    <div><Equipment1 {...{ equipName: equipment.equipmentName, imageUrl: `/${equipment.equipmentName}.jpeg`, descUrl: `./equipments/equipment/${equipment._id}` }} /></div>
                 ))}
             </div>
         );
