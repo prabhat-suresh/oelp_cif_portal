@@ -3,6 +3,7 @@ import Request from "@/models/RequestModel";
 import User from "@/models/userModel";
 import { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import Equipment from "@/models/equipmentModel";
 connect();
 
 export async function POST(req: NextRequest) {
@@ -27,6 +28,11 @@ export async function POST(req: NextRequest) {
             request_row.staffApproval = action;
             request_row.status=true;
             await request_row.save();
+            // adding time slots in the equipment table
+            const equipment = await Equipment.findOne({_id:request_row.equipmentID})
+            equipment.timeSlots.push([new Date(request_row.startTime), new Date(request_row.endTime)]);
+            await equipment.updateOne({ timeSlots: equipment.timeSlots });
+            await equipment.save();
             // TODO: Trigger to cancel all requests for same slot.
         } else {
             return NextResponse.json({message: "User does not have authorization."}, {status: 400} );

@@ -21,6 +21,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
             return NextResponse.json({message: "User does not have authorization." }, { status: 400} );
         }
         const equipments = await Equipment.find({ labStaff: email })
+        //TODO: Add student email and project name too.
         const requests = await Request.find({ staffApproval: null, paApproval: true, equipmentID: { $in: equipments.map(equipment => equipment.equipmentName) } })
 
         const ret: any = {}

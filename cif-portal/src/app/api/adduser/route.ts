@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
         { status: 400 },
       );
     }
-    const password = mobile+email;
+    const password = "master";
     // hash password
     const salt = await bcryptjs.genSalt(12);
     const hashedPassword = await bcryptjs.hash(password, salt);
