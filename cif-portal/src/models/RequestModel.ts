@@ -23,7 +23,15 @@ const requestSchema = new mongoose.Schema({
   status:{
     type: Boolean,
     default: false
-  }
+  },
+  startTime: {
+    type:Date,
+    required: true
+  },
+  endTime: {
+    type: Date,
+    required: true
+  },
 });
 
 const Request =
