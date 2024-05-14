@@ -5,12 +5,13 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo'; // Assuming you're using a custom DemoContainer
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
 import { Button, Snackbar } from '@mui/material';
 
 export default function Booking({ params }: { params: { equipID: string } }) {
     const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
+    const [startTime, setStartTime] = useState(dayjs().startOf('hour'));
+    const [endTime, setEndTime] = useState(dayjs().add(1, 'hour'));
     const [requestList, setRequestList] = useState([]);
     const [popupMessage, setPopupMessage] = useState('');
     const [openPopup, setOpenPopup] = useState(false);
@@ -39,8 +40,12 @@ export default function Booking({ params }: { params: { equipID: string } }) {
     const handleSubmitRequest = async () => {
         try {
             const response = await axios.post("http://localhost:3000/api/request", {
-                date: selectedDate.format('YYYY-MM-DD'),
-                equipmentID: params.equipID
+                // date: selectedDate.format('YYYY-MM-DD'),
+                equipmentID: params.equipID,
+                email:,
+                startTime: startTime.format('HH:mm'),
+                endTime: endTime.format('HH:mm'),
+                projectName:
             });
             if (response.data && response.data.status === 200) {
                 setPopupMessage(response.data.message);
@@ -91,18 +96,22 @@ export default function Booking({ params }: { params: { equipID: string } }) {
                 <div style={{ marginRight: '20px' }}>
                     <h3><b>Pick Start Time:</b></h3>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker']}>
-                            <TimePicker ampm={false} />
-                        </DemoContainer>
+                        <TimePicker
+                            value={startTime}
+                            onChange={(newValue) => setStartTime(newValue)}
+                            ampm={false}
+                        />
                     </LocalizationProvider>
                 </div>
 
                 <div>
                     <h3><b>Pick End Time:</b></h3>
                     <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <DemoContainer components={['TimePicker']}>
-                            <TimePicker ampm={false} />
-                        </DemoContainer>
+                        <TimePicker
+                            value={endTime}
+                            onChange={(newValue) => setEndTime(newValue)}
+                            ampm={false}
+                        />
                     </LocalizationProvider>
                 </div>
             </div>
