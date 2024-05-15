@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Button, Snackbar } from '@mui/material';
+import { Button, Snackbar, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
 
 export default function Booking({ params }: { params: { equipID: string } }) {
     const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
@@ -15,6 +15,8 @@ export default function Booking({ params }: { params: { equipID: string } }) {
     const [requestList, setRequestList] = useState([]);
     const [popupMessage, setPopupMessage] = useState('');
     const [openPopup, setOpenPopup] = useState(false);
+    const [projects, setProjects] = useState([]);
+    const [selectedProject, setSelectedProject] = useState('');
 
     useEffect(() => {
         const fetchRequestList = async () => {
@@ -34,7 +36,33 @@ export default function Booking({ params }: { params: { equipID: string } }) {
             }
         };
 
+        const fetchProjects = async (email) => {
+            try {
+                const response = await axios.post("http://localhost:3000/api/profile/project",
+                    JSON.stringify({ email })
+                );
+                if (response.data && response.data.status === 200) {
+                    setProjects(response.data.projects);
+                } else {
+                    console.error("Error fetching projects:", response.data);
+                }
+            } catch (error) {
+                console.error("Error fetching projects:", error);
+            }
+        };
+
+        const getEmailAndFetchProjects = async () => {
+            try {
+                const res = await axios.get("/api/whoami")
+                const email = res.data.email
+                fetchProjects(email);
+            } catch (error) {
+                console.error("Error fetching email:", error);
+            }
+        };
+
         fetchRequestList();
+        getEmailAndFetchProjects();
     }, [selectedDate, params.equipID]);
 
     const handleSubmitRequest = async () => {
@@ -42,12 +70,11 @@ export default function Booking({ params }: { params: { equipID: string } }) {
             const res = await axios.get("/api/whoami")
             const email = res.data.email
             const response = await axios.post("http://localhost:3000/api/request", {
-                // date: selectedDate.format('YYYY-MM-DD'),
                 equipmentID: params.equipID,
-                email: email,
+                email,
                 startTime: startTime.format('HH:mm'),
                 endTime: endTime.format('HH:mm'),
-                projectName: "crazy gcc compiler"
+                projectName: selectedProject
             });
             if (response.data && response.data.status === 200) {
                 setPopupMessage(response.data.message);
@@ -117,7 +144,23 @@ export default function Booking({ params }: { params: { equipID: string } }) {
                     </LocalizationProvider>
                 </div>
             </div>
-            <Button variant="contained" onClick={handleSubmitRequest} style={{ backgroundColor: '#1976d2', color: '#fff' }}>
+            <div style={{ marginTop: '20px' }}>
+                <FormControl variant="outlined" style={{ minWidth: 200 }}>
+                    <InputLabel id="project-select-label">Project</InputLabel>
+                    <Select
+                        labelId="project-select-label"
+                        id="project-select"
+                        value={selectedProject}
+                        onChange={(e) => setSelectedProject(e.target.value as string)}
+                        label="Project"
+                    >
+                        {projects.map((project: string) => (
+                            <MenuItem key={project} value={project}>{project}</MenuItem>
+                        ))}
+                    </Select>
+                </FormControl>
+            </div>
+            <Button variant="contained" onClick={handleSubmitRequest} style={{ backgroundColor: '#1976d2', color: '#fff', marginTop: '20px' }}>
                 Submit Request
             </Button>
             <Snackbar
