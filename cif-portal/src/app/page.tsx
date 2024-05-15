@@ -20,8 +20,11 @@ const Home = () => {
             <a className="nav-link me-3" href="/equipments">
               <u>Equipments</u>
             </a>
-            <a className="nav-link" href="/pendingRequests">
-              <u>Pending Requests</u>
+            <a className="nav-link me-3" href="/pendingRequests/labstaff">
+              <u>Lab Staff Pending Requests</u>
+            </a>
+            <a className="nav-link" href="/pendingRequests/projectadmin">
+              <u>Project Admin Pending Requests</u>
             </a>
           </div>
         </div>

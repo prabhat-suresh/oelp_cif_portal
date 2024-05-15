@@ -7,21 +7,21 @@ import { NextResponse } from "next/server";
 import mongoose from "mongoose";
 connect();
 
-async function overLaps(startTime: Date, endTime: Date, all_req : any) {
-    // Iterate over each entry in the Request document
-  const arg_end = Number( new Date(endTime));
+async function overLaps(startTime: Date, endTime: Date, all_req: any) {
+  // Iterate over each entry in the Request document
+  const arg_end = Number(new Date(endTime));
   const arg_start = Number(new Date(startTime))
 
 
   for (const entry of all_req) {
-      // Check for overlap of arg with every request of user
-    let startDB = Number( new Date(entry.startTime));
+    // Check for overlap of arg with every request of user
+    let startDB = Number(new Date(entry.startTime));
     let endDB = Number(new Date(entry.endTime));
     console.log(startTime, endTime, startDB, endDB);
     if (!(arg_end <= startDB || arg_start >= endDB)) {
-            // If there's an overlap, return true
-            return true;
-        }
+      // If there's an overlap, return true
+      return true;
+    }
   }
   return false;
 }
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
         error: "equipment ID is not valid"
       })
     }
-    const student = await User.findOne({email});
-    if(!student || !student.workingOnProjects.includes(projectName)) {
+    const student = await User.findOne({ email });
+    if (!student || !student.workingOnProjects.includes(projectName)) {
       return NextResponse.json({
         error: "User is not valid or is not part of the project"
       }, {
@@ -48,14 +48,14 @@ export async function POST(request: NextRequest) {
     const start = new Date(startTime);
     const end = new Date(endTime);
     const now = new Date();
-    if (start >= end || now>start) {
+    if (start >= end || now > start) {
       return NextResponse.json({
         error: "Invalid start time and end time found"
       }, {
         status: 400
       })
     }
-    const equipment = await Equipment.findOne({ _id:equipmentID });
+    const equipment = await Equipment.findOne({ _id: equipmentID });
     console.log(equipment)
     if (!equipment) {
       return NextResponse.json(
@@ -73,15 +73,15 @@ export async function POST(request: NextRequest) {
     console.log("requestCheck ", requestCheck);
     if (requestCheck) {
       return NextResponse.json(
-          {error: 'User already has an active request for the equipment in this time slot'},
-          { status: 400 },
+        { error: 'User already has an active request for the equipment in this time slot' },
+        { status: 400 },
       )
     }
     const all_req = await Request.find({ email });
-    if(all_req) {
+    if (all_req) {
       const overlap = await overLaps(startTime, endTime, all_req);
       console.log("overlaps ", overlap);
-      if(overlap) {
+      if (overlap) {
         return NextResponse.json({
           status: 400,
           message: "User already has an active request in this duration"
@@ -129,10 +129,12 @@ export async function POST(request: NextRequest) {
     }
     console.log(requestSaveStatus);
     return NextResponse.json({
-      message: "Request created successfully"},
-    {
+      message: "Request created successfully",
       status: 200
-    });
+    },
+      {
+        status: 200
+      });
     // TODO: add the above data to equipment time slots
   } catch (error: any) {
     return NextResponse.json({ error: error.message }, { status: 500 });

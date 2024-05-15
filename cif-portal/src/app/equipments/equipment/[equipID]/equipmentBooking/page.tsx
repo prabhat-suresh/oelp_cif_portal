@@ -6,7 +6,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateCalendar } from '@mui/x-date-pickers/DateCalendar';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { Button, Snackbar, MenuItem, FormControl, Select, InputLabel } from '@mui/material';
+import { Button, Snackbar, TextField } from '@mui/material';
 
 export default function Booking({ params }: { params: { equipID: string } }) {
     const [selectedDate, handleDateChange] = useState(dayjs(new Date()));
@@ -15,8 +15,7 @@ export default function Booking({ params }: { params: { equipID: string } }) {
     const [requestList, setRequestList] = useState([]);
     const [popupMessage, setPopupMessage] = useState('');
     const [openPopup, setOpenPopup] = useState(false);
-    const [projects, setProjects] = useState([]);
-    const [selectedProject, setSelectedProject] = useState('');
+    const [projectName, setProjectName] = useState('');
 
     useEffect(() => {
         const fetchRequestList = async () => {
@@ -36,33 +35,7 @@ export default function Booking({ params }: { params: { equipID: string } }) {
             }
         };
 
-        const fetchProjects = async (email) => {
-            try {
-                const response = await axios.post("http://localhost:3000/api/profile/project",
-                    JSON.stringify({ email })
-                );
-                if (response.data && response.data.status === 200) {
-                    setProjects(response.data.projects);
-                } else {
-                    console.error("Error fetching projects:", response.data);
-                }
-            } catch (error) {
-                console.error("Error fetching projects:", error);
-            }
-        };
-
-        const getEmailAndFetchProjects = async () => {
-            try {
-                const res = await axios.get("/api/whoami")
-                const email = res.data.email
-                fetchProjects(email);
-            } catch (error) {
-                console.error("Error fetching email:", error);
-            }
-        };
-
         fetchRequestList();
-        getEmailAndFetchProjects();
     }, [selectedDate, params.equipID]);
 
     const handleSubmitRequest = async () => {
@@ -72,9 +45,9 @@ export default function Booking({ params }: { params: { equipID: string } }) {
             const response = await axios.post("http://localhost:3000/api/request", {
                 equipmentID: params.equipID,
                 email,
-                startTime: startTime.format('HH:mm'),
-                endTime: endTime.format('HH:mm'),
-                projectName: selectedProject
+                startTime: selectedDate.format('YYYY-MM-DD') + "T" + startTime.format('HH:mm'),
+                endTime: selectedDate.format('YYYY-MM-DD') + "T" + endTime.format('HH:mm'),
+                projectName: projectName
             });
             if (response.data && response.data.status === 200) {
                 setPopupMessage(response.data.message);
@@ -145,20 +118,12 @@ export default function Booking({ params }: { params: { equipID: string } }) {
                 </div>
             </div>
             <div style={{ marginTop: '20px' }}>
-                <FormControl variant="outlined" style={{ minWidth: 200 }}>
-                    <InputLabel id="project-select-label">Project</InputLabel>
-                    <Select
-                        labelId="project-select-label"
-                        id="project-select"
-                        value={selectedProject}
-                        onChange={(e) => setSelectedProject(e.target.value as string)}
-                        label="Project"
-                    >
-                        {projects.map((project: string) => (
-                            <MenuItem key={project} value={project}>{project}</MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <TextField
+                    label="Project Name"
+                    variant="outlined"
+                    value={projectName}
+                    onChange={(e) => setProjectName(e.target.value)}
+                />
             </div>
             <Button variant="contained" onClick={handleSubmitRequest} style={{ backgroundColor: '#1976d2', color: '#fff', marginTop: '20px' }}>
                 Submit Request
