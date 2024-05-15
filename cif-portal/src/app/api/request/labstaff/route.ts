@@ -17,19 +17,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
             return NextResponse.json({message: "User not found"},{ status: 400 });
         }
         const user_role = user_row.role;
-        if (user_role != "faculty") {
+        if (user_role != "labStaff") {
             return NextResponse.json({message: "User does not have authorization." }, { status: 400} );
         }
         const equipments = await Equipment.find({ labStaff: email })
+        console.log(equipments)
         //TODO: Add student email and project name too.
-        const requests = await Request.find({ staffApproval: null, paApproval: true, equipmentID: { $in: equipments.map(equipment => equipment.equipmentName) } })
-
+        const requests = await Request.find({ staffApproval: null, paApproval: true, equipmentID: { $in: equipments.map(equipment => equipment._id) } })
+        console.log(requests)
         const ret: any = {}
         for (let req of requests) {
-            ret[req.equipmentName] = []
+            ret[req._id] = []
         }
         for (let req of requests) {
-            ret[req.equipmentName].push(req)
+            ret[req._id].push(req)
         }
 
         return NextResponse.json({message: "Filtered requests successfully", "pendingRequests": ret},{ status: 200})

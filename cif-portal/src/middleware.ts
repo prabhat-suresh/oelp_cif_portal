@@ -28,6 +28,6 @@ export const config = {
     '/',
     '/profile',
     '/login',
-    '/signup', '/pendingRequests'
+    '/signup', '/pendingRequests', '/equipments'
   ]
 }
