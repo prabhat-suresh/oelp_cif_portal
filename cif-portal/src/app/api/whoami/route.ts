@@ -1,19 +1,19 @@
-import {NextRequest, NextResponse} from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
-import {getDataFromToken} from "@/helpers/getDataFromToken";
-import {redirect} from "next/navigation";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
+import { redirect } from "next/navigation";
 
-export async function GET(request : NextRequest) {
+export async function GET(request: NextRequest) {
     try {
         const userEmail = await getDataFromToken(request)
         console.log("UserEmail", userEmail)
         if (!userEmail.length) {
-            return NextResponse.redirect(new URL('/login', request.nextUrl))
-            // return NextResponse.json({
-            //     message: "User does not have a token"
-            // }, {
-            //     status: 400
-            // })
+            //return NextResponse.redirect(new URL('/login', request.nextUrl))
+            return NextResponse.json({
+                message: "User does not have a token"
+            }, {
+                status: 400
+            })
         }
         console.log(userEmail);
         return NextResponse.json({
@@ -23,7 +23,7 @@ export async function GET(request : NextRequest) {
             status: 200
         })
 
-    } catch (error : any) {
+    } catch (error: any) {
         return NextResponse.json({
             error: error.message
         }, {

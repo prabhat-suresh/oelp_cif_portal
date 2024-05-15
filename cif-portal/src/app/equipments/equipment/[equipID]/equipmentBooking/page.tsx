@@ -39,13 +39,15 @@ export default function Booking({ params }: { params: { equipID: string } }) {
 
     const handleSubmitRequest = async () => {
         try {
+            const res = await axios.get("/api/whoami")
+            const email = res.data.email
             const response = await axios.post("http://localhost:3000/api/request", {
                 // date: selectedDate.format('YYYY-MM-DD'),
                 equipmentID: params.equipID,
-                email:,
+                email: email,
                 startTime: startTime.format('HH:mm'),
                 endTime: endTime.format('HH:mm'),
-                projectName:
+                projectName: "crazy gcc compiler"
             });
             if (response.data && response.data.status === 200) {
                 setPopupMessage(response.data.message);

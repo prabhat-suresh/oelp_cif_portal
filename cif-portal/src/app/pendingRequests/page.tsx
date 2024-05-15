@@ -16,19 +16,23 @@ export default async function PendingRequests() {
         } catch (err) {
             console.error(err);
         }
-        router.push("/");
+        router.refresh();
     };
 
     try {
+        // const resp = await axios.get("http://localhost:3000/api/whoami")
+        // const email = resp.data.email
+        // console.log(email)
         const res = await axios.post(
             "http://localhost:3000/api/request/projectadmin",
-            JSON.stringify({ email: "unnikrishnan@iitpkd.ac.in" })
+            JSON.stringify({ email: "newfaculty@iitpkd.ac.in" })
         );
         const dat = res.data;
         const status = dat.status;
         if (status != 200) {
             return <div className="alert alert-danger">ERROR</div>;
         }
+
         return (
             <div className="container">
                 <div className="card p-4">
@@ -52,14 +56,14 @@ export default async function PendingRequests() {
                                         <button
                                             className="btn me-2"
                                             style={{ backgroundColor: "#28a745", color: "white" }}
-                                            onClick={() => takeActionOnRequest("unnikrishnan@iitpkd.ac.in", request._id, true)}
+                                            onClick={() => takeActionOnRequest(email, request._id, true)}
                                         >
                                             Accept
                                         </button>
                                         <button
                                             className="btn"
                                             style={{ backgroundColor: "#dc3545", color: "white" }}
-                                            onClick={() => takeActionOnRequest("unnikrishnan@iitpkd.ac.in", request._id, false)}
+                                            onClick={() => takeActionOnRequest(email, request._id, false)}
                                         >
                                             Reject
                                         </button>
@@ -71,8 +75,9 @@ export default async function PendingRequests() {
                 </div>
             </div>
         );
-    } catch (err) {
-        console.log(err);
+    }
+    catch (err: any) {
+        console.log(err.message);
         return <div>Error loading data</div>;
     }
 }
